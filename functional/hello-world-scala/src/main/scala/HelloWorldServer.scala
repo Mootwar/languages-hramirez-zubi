@@ -4,6 +4,8 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+import spray.json.DefaultJsonProtocol._
 
 import scala.io.StdIn
 
@@ -14,7 +16,7 @@ object HelloWorldServer {
     implicit val system = ActorSystem(Behaviors.empty, "helloWorldSystem")
     implicit val executionContext = system.executionContext
 
-    // Define the route
+    // Define the routes
     val route =
       path("greet" / Segment) { person =>
         get {
@@ -24,6 +26,14 @@ object HelloWorldServer {
       pathSingleSlash {
         get {
           complete(s"Hello!")
+        }
+      } ~
+      path("sort") {
+        post {
+          entity(as[List[String]]) { unsortedList =>
+            val sortedList = unsortedList.sorted
+            complete(sortedList)
+          }
         }
       }
 
