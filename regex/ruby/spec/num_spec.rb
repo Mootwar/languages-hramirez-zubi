@@ -29,6 +29,7 @@ RSpec.describe 'Regular Expression for C++ integer literals' do
     it 'does not match any of the strings' do
       should_fail.each do |str|
         expect(str).not_to match(pattern)  
+      end
     end
   end
 end
